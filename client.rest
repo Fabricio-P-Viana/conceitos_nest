@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:3000
+
+# Recados
+###
+GET {{baseUrl}}/recados/
+###
+GET {{baseUrl}}/recados/1/
+###
+POST {{baseUrl}}/recados/
+Content-Type: application/json
+
+{
+    "id": 1,
+    "title": "Recado 1",
+    "description": "Descrição do recado 1"
+}
