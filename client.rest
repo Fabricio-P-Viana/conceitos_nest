@@ -4,6 +4,10 @@
 ###
 GET {{baseUrl}}/recados/
 ###
+GET {{baseUrl}}/recados/
+?offset=10
+&limit=10
+###
 GET {{baseUrl}}/recados/1/
 ###
 POST {{baseUrl}}/recados/
@@ -14,3 +18,14 @@ Content-Type: application/json
     "title": "Recado 1",
     "description": "Descrição do recado 1"
 }
+
+###
+PATCH  {{baseUrl}}/recados/1
+Content-Type: application/json
+
+{
+    "title": "Recado 1"
+}
+
+###
+DELETE {{baseUrl}}/recados/1
