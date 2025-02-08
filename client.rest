@@ -16,9 +16,7 @@ Content-Type: application/json
 {
     "texto": "Olá, tudo bem? 2",
     "de": "João",
-    "para": "Maria",
-    "lido": false,
-    "data": "2021-01-01T00:00:00.000Z"
+    "para": "Maria"
 }
 
 ###

@@ -1,30 +1,30 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RecadoEntity } from './entities/recado.entity';
+import { CreateRecadoDto } from './dto/create-recado.dto';
+import { UpdateRecadoDto } from './dto/update-recado.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RecadosService {
-  private lastId = 1;
-  private recados: RecadoEntity[] = [
-    {
-      id: 1,
-      texto: 'Olá, tudo bem?',
-      de: 'João',
-      para: 'Maria',
-      lido: false,
-      data: new Date(),
-    },
-  ];
+  constructor(
+    @InjectRepository(RecadoEntity)
+    private readonly recadoRepository: Repository<RecadoEntity>,
+  ) {}
 
   throwNotFoundException() {
     throw new NotFoundException('Recado não encontrado!');
   }
 
-  findAll() {
-    return this.recados;
+  async findAll() {
+    const recados = await this.recadoRepository.find();
+    return recados;
   }
 
-  findOne(id: string) {
-    const recado = this.recados.find(recado => recado.id === +id);
+  async findOne(id: number) {
+    const recado = await this.recadoRepository.findOne({
+      where: { id },
+    });
 
     if (recado) return recado;
 
@@ -32,42 +32,41 @@ export class RecadosService {
     this.throwNotFoundException();
   }
 
-  create(recado: RecadoEntity) {
-    this.lastId++;
-    const id = this.lastId;
-    const novoRecado = { ...recado, id };
-    this.recados.push(novoRecado);
-    return novoRecado;
+  async create(createRecadoDto: CreateRecadoDto) {
+    const novoRecado = {
+      ...createRecadoDto,
+      lido: false,
+      data: new Date(),
+    };
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    const recado = await this.recadoRepository.create(novoRecado);
+    return this.recadoRepository.save(recado);
   }
 
-  update(id: string, body: RecadoEntity) {
-    const recadoExistenteIndex = this.recados.findIndex(
-      recado => recado.id === +id,
-    );
-
-    if (recadoExistenteIndex < 0) this.throwNotFoundException();
-
-    const recadoExistente = this.recados[recadoExistenteIndex];
-
-    this.recados[recadoExistenteIndex] = {
-      ...recadoExistente,
-      ...body,
+  async update(id: number, updateRecadoDto: UpdateRecadoDto) {
+    const partialUpdateRecadoDto = {
+      lido: updateRecadoDto?.lido,
+      texto: updateRecadoDto?.texto,
     };
 
-    return this.recados[recadoExistenteIndex];
-  }
+    // preload é uma função do TypeORM que faz a busca e atualização ao mesmo tempo
+    const recado = await this.recadoRepository.preload({
+      id,
+      ...partialUpdateRecadoDto,
+    });
 
-  remove(id: string) {
-    const recadoExistenteIndex = this.recados.findIndex(
-      recado => recado.id === +id,
-    );
+    if (!recado) return this.throwNotFoundException();
 
-    if (recadoExistenteIndex < 0) this.throwNotFoundException();
-
-    const recado = this.recados[recadoExistenteIndex];
-
-    this.recados.splice(recadoExistenteIndex, 1);
+    await this.recadoRepository.save(recado);
 
     return recado;
+  }
+
+  async remove(id: number) {
+    const recado = await this.recadoRepository.findOneBy({ id });
+
+    if (!recado) return this.throwNotFoundException();
+
+    return this.recadoRepository.remove(recado);
   }
 }
