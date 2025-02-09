@@ -14,9 +14,9 @@ POST {{baseUrl}}/recados/
 Content-Type: application/json
 
 {
-    "texto": "Olá, tudo bem? 2",
-    "de": "João",
-    "para": "Maria"
+    "texto": "Olá, tudo bem?",
+    "deId": 1,
+    "paraId": 1
 }
 
 ###
@@ -29,3 +29,36 @@ Content-Type: application/json
 
 ###
 DELETE {{baseUrl}}/recados/1
+
+
+
+# Pessoas
+###
+GET {{baseUrl}}/pessoas/
+###
+GET {{baseUrl}}/pessoas/
+?offset=10
+&limit=10
+###
+GET {{baseUrl}}/pessoas/2/
+###
+POST {{baseUrl}}/pessoas/
+Content-Type: application/json
+
+{
+    "nome": "Maria",
+    "email": "maria@gmail.com",
+    "password": "123456"
+}
+
+###
+PATCH  {{baseUrl}}/pessoas/2
+Content-Type: application/json
+
+{
+   "nome": "Maria Silva",
+   "password": "654321"
+}
+
+###
+DELETE {{baseUrl}}/pessoas/1
