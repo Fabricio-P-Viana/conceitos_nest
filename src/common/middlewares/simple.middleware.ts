@@ -12,6 +12,7 @@ export class SimpleMiddleware implements NestMiddleware {
     // posso atrelar coisas no body da req
     req['user'] = {
       nome: 'Fabricio',
+      role: 'admin',
     };
     // executa antes do outro middleware
     next();

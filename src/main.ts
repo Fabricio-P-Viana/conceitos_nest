@@ -14,6 +14,9 @@ async function bootstrap() {
     }),
     new ParseIntIdPipe(),
   );
+  // assim perde a injeção de depencia do nest vai para o app.module
+  // app.useGlobalFilters(new MyExceptionFilter());
+  // app.useGlobalGuards(new IsAdminGuard());
 
   await app.listen(process.env.PORT ?? 3000);
 }

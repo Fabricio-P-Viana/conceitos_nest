@@ -1,16 +1,19 @@
 import {
-  MiddlewareConsumer,
+  // MiddlewareConsumer,
   Module,
-  NestModule,
-  RequestMethod,
+  // NestModule,
+  // RequestMethod,
 } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RecadosModule } from 'src/recados/recados.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PessoasModule } from 'src/pessoas/pessoas.module';
-import { SimpleMiddleware } from 'src/common/middlewares/simple.middleware';
-import { OutroMiddleware } from 'src/common/middlewares/outro.middleware';
+// import { SimpleMiddleware } from 'src/common/middlewares/simple.middleware';
+// import { OutroMiddleware } from 'src/common/middlewares/outro.middleware';
+// import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+// import { MyExceptionFilter } from 'src/common/filters/my-exception.filter';
+// import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
 
 @Module({
   imports: [
@@ -29,15 +32,29 @@ import { OutroMiddleware } from 'src/common/middlewares/outro.middleware';
     PessoasModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // posso usar assim de forma global sem perder a
+    // injeção de depencia do nest
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: MyExceptionFilter,
+    // },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: IsAdminGuard,
+    // },
+  ],
 })
+export class AppModule {}
+
 // aplicando o middleware globalmente
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    // a ordem importa
-    consumer.apply(SimpleMiddleware, OutroMiddleware).forRoutes({
-      path: '*',
-      method: RequestMethod.ALL,
-    });
-  }
-}
+// export class AppModule implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     // a ordem importa
+//     consumer.apply(SimpleMiddleware, OutroMiddleware).forRoutes({
+//       path: '*',
+//       method: RequestMethod.ALL,
+//     });
+//   }
+// }

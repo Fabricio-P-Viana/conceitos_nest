@@ -9,13 +9,15 @@ import {
   Patch,
   Post,
   Query,
-  Req,
+  // Req,
 } from '@nestjs/common';
 import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { Request } from 'express';
+// import { Request } from 'express';
+import { UlrParam } from 'src/common/params/url-param.decorator';
+// import { ReqDataParam } from 'src/common/params/req-data-param.decorator';
 
 @Controller('recados')
 export class RecadosController {
@@ -23,13 +25,25 @@ export class RecadosController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  async findAll(@Query() paginationDto: PaginationDto, @Req() req: Request) {
-    console.log(req['user']); // adicionado no middleware posso acessar por aqui
+  async findAll(
+    @Query() paginationDto: PaginationDto,
+    @UlrParam() url: string, // decorator de parametro custom
+    // @ReqDataParam('url') url:string, nesse decorator posso acessar qualquer parametro da data
+  ) {
+    console.log(url);
 
-    // return `Retorna todos os recados. Limit=${limit}, Offset=${offset}.`;
     const recados = await this.recadosService.findAll(paginationDto);
     return recados;
   }
+
+  // @Get()
+  // async findAll(@Query() paginationDto: PaginationDto, @Req() req: Request) {
+  //   console.log(req['user']); // adicionado no middleware posso acessar por aqui
+
+  //   // return `Retorna todos os recados. Limit=${limit}, Offset=${offset}.`;
+  //   const recados = await this.recadosService.findAll(paginationDto);
+  //   return recados;
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
