@@ -1,0 +1,1 @@
+export const SERVER_NAME_GLOBAL = 'SERVER_NAME';

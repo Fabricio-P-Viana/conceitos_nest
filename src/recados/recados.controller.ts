@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Param,
   Patch,
   Post,
@@ -17,11 +18,25 @@ import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 // import { Request } from 'express';
 import { UlrParam } from 'src/common/params/url-param.decorator';
+import {
+  ONLY_LOWERCASE_LETTERS_REGEX,
+  REMOVE_SPACES_REGEX,
+  SERVER_NAME,
+} from './recados-constants';
+import { RegexProtocol } from 'src/common/regex/regex-protocol.regex';
 // import { ReqDataParam } from 'src/common/params/req-data-param.decorator';
 
 @Controller('recados')
 export class RecadosController {
-  constructor(private readonly recadosService: RecadosService) {}
+  constructor(
+    private readonly recadosService: RecadosService,
+    @Inject(SERVER_NAME)
+    private readonly serverName: string,
+    @Inject(REMOVE_SPACES_REGEX)
+    private readonly removeSpacesRegex: RegexProtocol,
+    @Inject(ONLY_LOWERCASE_LETTERS_REGEX)
+    private readonly onlyLowercaseLettersRegex: RegexProtocol,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Get()
